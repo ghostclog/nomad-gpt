@@ -1,0 +1,4 @@
+nomadGPT/
+.env
+env/
+notebook.ipynb
