@@ -2,3 +2,5 @@ nomadGPT/
 .env
 env/
 notebook.ipynb
+files/
+.cache/
