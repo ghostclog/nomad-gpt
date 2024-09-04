@@ -1,6 +1,6 @@
-nomadGPT/
-.env
 env/
-notebook.ipynb
+.env
 files/
 .cache/
+.streamlit
+ch/.cache/
