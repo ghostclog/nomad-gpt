@@ -32,15 +32,6 @@ class ChatCallbackHandler(BaseCallbackHandler):
         self.message += token
         self.message_box.markdown(self.message)
 
-# 모델
-llm = ChatOpenAI(
-    temperature=0.1,
-    streaming=True,
-    callbacks=[
-        ChatCallbackHandler(),
-    ],
-)
-
 
 
 # 데이터 캐싱하기. 해당 어노테이션?이 존재하면 이미 존재하는 파일에 대해선 임베딩을 다시 하진 않음.
@@ -121,10 +112,21 @@ st.markdown("""어서 오세요!!
 ### 디자인 ###
 
 with st.sidebar:
-    file = st.file_uploader(
-        "Upload a .txt .pdf or .docx file",
-        type=["pdf", "txt", "docx"],
-    )
+    api=st.text_input("api키를 입력해주세요.")
+    if api:
+        # 모델
+        llm = ChatOpenAI(
+            temperature=0.1,
+            streaming=True,
+            callbacks=[
+                ChatCallbackHandler(),
+            ],
+            opne_api_key = api
+        )
+        file = st.file_uploader(
+            "Upload a .txt .pdf or .docx file",
+            type=["pdf", "txt", "docx"],
+        )
 
 # 파일이 들어온 경우
 if file:

@@ -14,10 +14,6 @@ from langchain.schema import StrOutputParser
 from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings import CacheBackedEmbeddings, OpenAIEmbeddings
 
-llm = ChatOpenAI(
-    temperature=0.1,
-)
-
 has_transcript = os.path.exists("./.cache/podcast.txt")
 
 splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
@@ -108,6 +104,14 @@ Get started by uploading a video file in the sidebar.
 )
 
 with st.sidebar:
+    api=st.text_input("api키를 입력해주세요.")
+    if api:
+        # 모델
+        llm = ChatOpenAI(
+            temperature=0.1,
+            streaming=True,
+            opne_api_key = api
+        )
     video = st.file_uploader(
         "Video",
         type=["mp4", "avi", "mkv", "mov"],

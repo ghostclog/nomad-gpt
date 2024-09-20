@@ -7,10 +7,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 import streamlit as st
 
-llm = ChatOpenAI(
-    temperature=0.1,
-)
-
 answers_prompt = ChatPromptTemplate.from_template(
     """
     다음 컨텍스트만 사용하면 사용자의 질문에 답할 수 있습니다. 모른다고만 말할 수 없다면 아무것도 지어내지 마세요.
@@ -143,6 +139,14 @@ st.markdown(
 
 
 with st.sidebar:
+    api=st.text_input("api키를 입력해주세요.")
+    if api:
+        # 모델
+        llm = ChatOpenAI(
+            temperature=0.1,
+            streaming=True,
+            opne_api_key = api
+        )
     url = st.text_input(
         "Write down a URL",
         placeholder="https://example.com",

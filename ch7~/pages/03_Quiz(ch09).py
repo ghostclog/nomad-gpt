@@ -25,13 +25,6 @@ st.set_page_config(
 
 st.title("QuizGPT")
 
-llm = ChatOpenAI(
-    temperature=0.1,
-    model="gpt-3.5-turbo-1106",
-    streaming=True,
-    callbacks=[StreamingStdOutCallbackHandler()],
-)
-
 @st.cache_data(show_spinner="파일 로딩중...")
 def split_file(file):
     file_content = file.read()
@@ -212,12 +205,6 @@ formatting_prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-formatting_chain = formatting_prompt | llm
-
-@st.cache_data(show_spinner="퀴즈 만드는중...")
-def run_quiz_chain(_docs,topic):
-    chain = {"context": questions_chain} | formatting_chain | output_parser
-    return chain.invoke(_docs)
 
 @st.cache_data(show_spinner="위키피디아 검색 중...")
 def wikipedia_search(term):
@@ -225,6 +212,14 @@ def wikipedia_search(term):
     return retriver.get_relevant_documents(term)
 
 with st.sidebar:
+    api=st.text_input("api키를 입력해주세요.")
+    if api:
+        # 모델
+        llm = ChatOpenAI(
+            temperature=0.1,
+            streaming=True,
+            opne_api_key = api
+        )
     docs = None
     choice = st.selectbox("당신이 사용할 것을 선택하세요.",(
         "파일","위키피디아"
@@ -237,6 +232,14 @@ with st.sidebar:
         topic = st.text_input("검색하실 주제를 입력해주세요.")
         if topic:
             docs = wikipedia_search(topic)
+
+formatting_chain = formatting_prompt | llm
+
+@st.cache_data(show_spinner="퀴즈 만드는중...")
+def run_quiz_chain(_docs,topic):
+    chain = {"context": questions_chain} | formatting_chain | output_parser
+    return chain.invoke(_docs)
+
 
 if not docs:
     st.markdown("""
